@@ -1,0 +1,5 @@
+C:\Users\elevenhsiao\source\repos\SkypeLib\DotSkypeLib\bin\Debug\netstandard2.0\DotSkypeLib.deps.json
+C:\Users\elevenhsiao\source\repos\SkypeLib\DotSkypeLib\bin\Debug\netstandard2.0\DotSkypeLib.dll
+C:\Users\elevenhsiao\source\repos\SkypeLib\DotSkypeLib\obj\Debug\netstandard2.0\DotSkypeLib.csprojAssemblyReference.cache
+C:\Users\elevenhsiao\source\repos\SkypeLib\DotSkypeLib\obj\Debug\netstandard2.0\DotSkypeLib.AssemblyInfoInputs.cache
+C:\Users\elevenhsiao\source\repos\SkypeLib\DotSkypeLib\obj\Debug\netstandard2.0\DotSkypeLib.AssemblyInfo.cs
