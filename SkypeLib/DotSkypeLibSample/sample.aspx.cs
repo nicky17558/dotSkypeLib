@@ -19,8 +19,7 @@ namespace DotSkypeLibSample
             var contact = dotSkype.GetSkypeUserContactInfoList(userName, exchangeToken);
 
             var regToken =dotSkype.GetRegisterToken(exchangeToken);
-            var res = contact.contacts.Where(c => c.person_id.Contains("joy"));
-            dotSkype.SendText(regToken, "Test", "8:pjoy0415");
+            dotSkype.SendText(regToken, "Test", "");
             //dotSkype.QueryThread(exchangeToken, "");
             //dotSkype.SendMultipleText(exchangeToken, "test", new List<string>() { "sendMessageUserId" });
         }
