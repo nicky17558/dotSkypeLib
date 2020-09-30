@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\elevenhsiao\\source\\repos\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj": {}
+    "C:\\Users\\elevenhsiao\\source\\repos\\nicky17558\\dotSkypeLib\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj": {}
   },
   "projects": {
-    "C:\\Users\\elevenhsiao\\source\\repos\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj": {
+    "C:\\Users\\elevenhsiao\\source\\repos\\nicky17558\\dotSkypeLib\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\elevenhsiao\\source\\repos\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj",
+        "projectUniqueName": "C:\\Users\\elevenhsiao\\source\\repos\\nicky17558\\dotSkypeLib\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj",
         "projectName": "DotSkypeLib",
-        "projectPath": "C:\\Users\\elevenhsiao\\source\\repos\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj",
+        "projectPath": "C:\\Users\\elevenhsiao\\source\\repos\\nicky17558\\dotSkypeLib\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj",
         "packagesPath": "C:\\Users\\elevenhsiao\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\elevenhsiao\\source\\repos\\SkypeLib\\DotSkypeLib\\obj\\",
+        "outputPath": "C:\\Users\\elevenhsiao\\source\\repos\\nicky17558\\dotSkypeLib\\SkypeLib\\DotSkypeLib\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\elevenhsiao\\AppData\\Roaming\\NuGet\\NuGet.Config",

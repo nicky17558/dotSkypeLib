@@ -134,6 +134,12 @@ namespace SkypeLib
 
                 var userProfile = JsonConvert.DeserializeObject<UserProfile>(contentStringData);
                 streamReader.Close();
+
+
+                if(userProfile.username.Contains("live:"))
+                {
+                   // userProfile.username = userProfile.username.Replace("live:","");
+                }
                 return userProfile.username;
             }
         }
@@ -142,21 +148,41 @@ namespace SkypeLib
 
         public ContactInfo GetSkypeUserContactInfoList(string skypeId, string skypeToken)
         {
-            string requestUriStringUL = ContactHost +"/contacts/v2/users/" + skypeId + "/contacts";
+            string requestUriStringUL = ContactHost +"contacts/v2/users/" + skypeId + "/contacts";
             HttpWebRequest request = WebRequest.Create(requestUriStringUL) as HttpWebRequest;
-            request.Method = "GET";
+            request.Method = "Get";
             request.Headers.Add("X-Skypetoken", skypeToken);
             request.ContentType = "application/json; charset=UTF-8";
 
-            var friends = new ContactInfo();
 
-            using (WebResponse response = request.GetResponse())
+            //byte[] bytes;
+            //bytes = Encoding.UTF8.GetBytes("28:"+skypeId);
+            //request.ContentLength = bytes.Length;
+            //Stream requestStream = request.GetRequestStream();
+            //requestStream.Write(bytes, 0, bytes.Length);
+            //requestStream.Close();
+
+            HttpWebResponse response;
+            response = (HttpWebResponse)request.GetResponse();
+            if (response.StatusCode == HttpStatusCode.OK)
             {
                 StreamReader streamReader = new StreamReader(response.GetResponseStream());
                 string end = streamReader.ReadToEnd();
                 streamReader.Close();
                 return JsonConvert.DeserializeObject<ContactInfo>(end);
             }
+            return null;
+
+
+            //var friends = new ContactInfo();
+
+            //using (WebResponse response = request.GetResponse())
+            //{
+            //    StreamReader streamReader = new StreamReader(response.GetResponseStream());
+            //    string end = streamReader.ReadToEnd();
+            //    streamReader.Close();
+            //    return JsonConvert.DeserializeObject<ContactInfo>(end);
+            //}
 
         }
 

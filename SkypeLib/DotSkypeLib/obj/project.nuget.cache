@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lWxaZEABxqomfELpKkGOqHvz+IRJwnIG93AjjLyWuFMb9B/m/XgE8Fw3j7QHchA4FoK6rAu5A6KZINz72eH8zQ==",
+  "dgSpecHash": "btxAhEJ2vO45ovA17FS4g9+VYVB7pLJ/tk3vpYsDYTWDCZgYqkeCxPhGW3vp3brqZDVHTUf7K/1XZe0L6zlMiw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\elevenhsiao\\source\\repos\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj",
+  "projectFilePath": "C:\\Users\\elevenhsiao\\source\\repos\\nicky17558\\dotSkypeLib\\SkypeLib\\DotSkypeLib\\DotSkypeLib.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\elevenhsiao\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\elevenhsiao\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
