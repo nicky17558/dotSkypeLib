@@ -11,3 +11,4 @@ C:\Users\elevenhsiao\source\repos\nicky17558\dotSkypeLib\SkypeLib\DotSkypeLib\ob
 C:\Users\elevenhsiao\source\repos\nicky17558\dotSkypeLib\SkypeLib\DotSkypeLib\obj\Debug\netstandard2.0\DotSkypeLib.csproj.CoreCompileInputs.cache
 C:\Users\elevenhsiao\source\repos\nicky17558\dotSkypeLib\SkypeLib\DotSkypeLib\obj\Debug\netstandard2.0\DotSkypeLib.dll
 C:\Users\elevenhsiao\source\repos\nicky17558\dotSkypeLib\SkypeLib\DotSkypeLib\obj\Debug\netstandard2.0\DotSkypeLib.pdb
+C:\Users\elevenhsiao\source\repos\nicky17558\dotSkypeLib\SkypeLib\DotSkypeLib\obj\Debug\netstandard2.0\DotSkypeLib.csprojAssemblyReference.cache

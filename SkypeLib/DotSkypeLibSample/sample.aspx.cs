@@ -13,7 +13,7 @@ namespace DotSkypeLibSample
         protected void Page_Load(object sender, EventArgs e)
         {
             DotSkype dotSkype = new DotSkype();
-            var loginToken = dotSkype.SendSoapLogin("hughes0227@gmail.com", "9ccef41fa5");
+            var loginToken = dotSkype.SendSoapLogin("", "");
             var exchangeToken = dotSkype.ExchangeSkypeToken(loginToken);
             var userName = dotSkype.GetSkypeUserProfile(exchangeToken);
             var contact = dotSkype.GetSkypeUserContactInfoList(userName, exchangeToken);
