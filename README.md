@@ -2,27 +2,30 @@
 dot net skype Api lib
 
 
-¨Ï¥Î¤èªk
+ä½¿ç”¨æ–¹æ³•
 
     DotSkype dotSkype = new DotSkype();
 
-    //µn¤J¶ñSKYPE±b¸¹±K½X
+    //ç™»å…¥å¡«SKYPEå¸³è™Ÿå¯†ç¢¼
     var loginToken = dotSkype.SendSoapLogin("xxxxxx", "password");
 
-    //¥æ´«SKYPETOKEN
+    //äº¤æ›SKYPETOKEN
     var exchangeToken = dotSkype.ExchangeSkypeToken(loginToken);
+    
+    //äº¤æ›ç™¼è©±ç”¨token
+    var regToken =dotSkype.GetRegisterToken(exchangeToken);
 
-    //¬d¸ß¦Û¤vªºUserId
+    //æŸ¥è©¢è‡ªå·±çš„UserId
     var userName = dotSkype.GetSkypeUserProfile(exchangeToken);
 
-    //¬d¸ß¦Û¤vªºªB¤Í²M³æ
+    //æŸ¥è©¢è‡ªå·±çš„æœ‹å‹æ¸…å–®
     var contact = dotSkype.GetSkypeUserContactInfoList(userName, exchangeToken);
 
-    //¬d¸ß¦Û¤vªº©Ò¦³Conversaction
+    //æŸ¥è©¢è‡ªå·±çš„æ‰€æœ‰Conversaction
     //dotSkype.QueryThread(exchangeToken, "");
 
-    //°e¤j¶q½T«O¥ş³¡«H®§
-    //dotSkype.SendMultipleText(exchangeToken, "test", new List<string>() { "sendMessageUserId" });
+    //é€å¤§é‡ç¢ºä¿å…¨éƒ¨ä¿¡æ¯
+    //dotSkype.SendMultipleText(regToken, "test", new List<string>() { "sendMessageUserId" });
 
-    //°e³æ«Ê«H®§
-    //dotSkype.SendText(exchangeToken, "test","sendMessageUserId");
+    //é€å–®å°ä¿¡æ¯
+    //dotSkype.SendText(regToken, "test","sendMessageUserId");
