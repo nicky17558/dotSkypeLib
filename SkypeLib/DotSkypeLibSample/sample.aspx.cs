@@ -14,12 +14,11 @@ namespace DotSkypeLibSample
         {
             DotSkype dotSkype = new DotSkype();
             var loginToken = dotSkype.SendSoapLogin("", "");
-            var exchangeToken = dotSkype.ExchangeSkypeToken(loginToken);
-            var userName = dotSkype.GetSkypeUserProfile(exchangeToken);
-            var contact = dotSkype.GetSkypeUserContactInfoList(userName, exchangeToken);
+            dotSkype.ExchangeSkypeToken(loginToken);
+            var userName = dotSkype.GetSkypeUserProfile();
+            var contact = dotSkype.GetSkypeUserContactInfoList(userName);
+            var regToken =dotSkype.GetRegisterToken();
 
-            var regToken =dotSkype.GetRegisterToken(exchangeToken);
-            dotSkype.SendText(regToken, "Test", "");
             //dotSkype.QueryThread(exchangeToken, "");
             //dotSkype.SendMultipleText(exchangeToken, "test", new List<string>() { "sendMessageUserId" });
         }

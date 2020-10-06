@@ -17,11 +17,13 @@ namespace SkypeLib
         const string LiveHost = "https://login.live.com/";
         const string SkypeHost = "https://edge.skype.com/";
         const string ApiUser = "https://api.skype.com/";
-        const string MsgHost = "https://client-s.gateway.messenger.live.com/v1/";
         const string ContactHost = "https://contacts.skype.com/";
+        const string MsgHost = "https://client-s.gateway.messenger.live.com/v1/";
 
+        private string _skypeToken = "";
+        private string _endPoint = "";
 
-        public string BuildSopa(string account,string password)
+        public string BuildSopa(string account, string password)
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("<Envelope xmlns='http://schemas.xmlsoap.org/soap/envelope/'");
@@ -33,8 +35,8 @@ namespace SkypeLib
             stringBuilder.AppendLine("<Header>");
             stringBuilder.AppendLine("<wsse:Security>");
             stringBuilder.AppendLine("<wsse:UsernameToken Id='user'>");
-            stringBuilder.AppendLine("<wsse:Username>"+ account + "</wsse:Username>");
-            stringBuilder.AppendLine("<wsse:Password>"+password+"</wsse:Password>");
+            stringBuilder.AppendLine("<wsse:Username>" + account + "</wsse:Username>");
+            stringBuilder.AppendLine("<wsse:Password>" + password + "</wsse:Password>");
             stringBuilder.AppendLine("</wsse:UsernameToken>");
             stringBuilder.AppendLine("</wsse:Security>");
             stringBuilder.AppendLine("</Header>");
@@ -56,11 +58,11 @@ namespace SkypeLib
             return stringBuilder.ToString();
         }
 
-        public string SendSoapLogin(string account,string password)
+        public string SendSoapLogin(string account, string password)
         {
             var request = WebRequest.Create(LiveHost + "RST.srf") as HttpWebRequest;
             byte[] bytes;
-            bytes = System.Text.Encoding.UTF8.GetBytes(BuildSopa(account,password));
+            bytes = System.Text.Encoding.UTF8.GetBytes(BuildSopa(account, password));
             request.ContentType = "application/xml;";
             request.ContentLength = bytes.Length;
             request.Method = "POST";
@@ -81,13 +83,10 @@ namespace SkypeLib
                 string responseStr = new StreamReader(responseStream).ReadToEnd();
                 //token = responseStr.Replace("<wsse:BinarySecurityToken Id=\"Compact0\">", "|").Replace("</wsse:BinarySecurityToken>", "|").Split('|')[1];
 
-
-
                 return token;
             }
             return null;
         }
-
         public string ExchangeSkypeToken(string token)
         {
             var request = WebRequest.Create(SkypeHost + "rps/v1/rps/skypetoken") as HttpWebRequest;
@@ -116,24 +115,35 @@ namespace SkypeLib
                 string responseStr = new StreamReader(responseStream).ReadToEnd();
 
                 var Jdata = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(responseStr);
-                return Jdata["skypetoken"].ToString();
+                _skypeToken = Jdata["skypetoken"].ToString();
+
+                return _skypeToken;
             }
             return null;
         }
 
-        public string GetRegisterToken(string skypeToken)
+        public string GetRegisterToken()
         {
-
             var request = WebRequest.Create(MsgHost + "users/ME/endpoints") as HttpWebRequest;
             request.Method = "GET";
-            request.Headers.Add("X-Skypetoken", skypeToken);
-            request.Headers.Add("Authentication", "skypetoken=" + skypeToken);
+            request.Headers.Add("X-Skypetoken", _skypeToken);
+            request.Headers.Add("Authentication", "skypetoken=" + _skypeToken);
 
 
 
             try
             {
                 var response = request.GetResponse();
+
+                if (!MsgHost.Contains(response.ResponseUri.Host))
+                {
+                    _endPoint = "https://" + response.ResponseUri.Host + "/v1/";
+                }
+                else
+                {
+                    _endPoint = MsgHost;
+                }
+
                 var registTokenSource = response.Headers["Set-RegistrationToken"].ToString();
                 return registTokenSource;
             }
@@ -143,11 +153,11 @@ namespace SkypeLib
             }
         }
 
-        public string GetSkypeUserProfile(string skypeToken)
+        public string GetSkypeUserProfile()
         {
-            HttpWebRequest httpWebRequest = WebRequest.Create(ApiUser+ "users/self/profile") as HttpWebRequest;
+            HttpWebRequest httpWebRequest = WebRequest.Create(ApiUser + "users/self/profile") as HttpWebRequest;
             httpWebRequest.Method = "GET";
-            httpWebRequest.Headers.Add("X-Skypetoken", skypeToken);
+            httpWebRequest.Headers.Add("X-Skypetoken", _skypeToken);
 
             using (WebResponse response = httpWebRequest.GetResponse())
             {
@@ -158,22 +168,20 @@ namespace SkypeLib
                 streamReader.Close();
 
 
-                if(userProfile.username.Contains("live:"))
+                if (userProfile.username.Contains("live:"))
                 {
-                   // userProfile.username = userProfile.username.Replace("live:","");
+                    // userProfile.username = userProfile.username.Replace("live:","");
                 }
                 return userProfile.username;
             }
         }
 
-
-
-        public ContactInfo GetSkypeUserContactInfoList(string skypeId, string skypeToken)
+        public ContactInfo GetSkypeUserContactInfoList(string skypeId)
         {
-            string requestUriStringUL = ContactHost +"contacts/v2/users/" + skypeId + "/contacts";
+            string requestUriStringUL = ContactHost + "contacts/v2/users/" + skypeId + "/contacts";
             HttpWebRequest request = WebRequest.Create(requestUriStringUL) as HttpWebRequest;
             request.Method = "Get";
-            request.Headers.Add("X-Skypetoken", skypeToken);
+            request.Headers.Add("X-Skypetoken", _skypeToken);
             request.ContentType = "application/json; charset=UTF-8";
 
 
@@ -208,8 +216,7 @@ namespace SkypeLib
 
         }
 
-
-        public ConversactionThread GetSkypeConversactionList(string skypeToken,string backLink="")
+        public ConversactionThread GetSkypeConversactionList(string backLink = "")
         {
             try
             {
@@ -226,8 +233,8 @@ namespace SkypeLib
 
                 HttpWebRequest httpWebRequest = WebRequest.Create(url) as HttpWebRequest;
                 httpWebRequest.Method = "GET";
-                httpWebRequest.Headers.Add("X-Skypetoken", skypeToken);
-                httpWebRequest.Headers.Add("Authentication", "skypetoken=" + skypeToken);
+                httpWebRequest.Headers.Add("X-Skypetoken", _skypeToken);
+                httpWebRequest.Headers.Add("Authentication", "skypetoken=" + _skypeToken);
 
                 using (WebResponse response = httpWebRequest.GetResponse())
                 {
@@ -241,33 +248,31 @@ namespace SkypeLib
             }
             catch (Exception ex)
             {
-               
-                    return null;
-                
+
+                return null;
+
 
             }
-           
+
         }
-
-
 
         public List<ConversactionItem> conversactionItems = new List<ConversactionItem>();
 
-        public void QueryThread(string exchangeToken, string backLink)
+        public void QueryThread(string backLink)
         {
             DotSkype dotSkype = new DotSkype();
-            var threadList = dotSkype.GetSkypeConversactionList(exchangeToken, backLink);
+            var threadList = dotSkype.GetSkypeConversactionList(backLink);
             if (threadList == null)
             {
                 Thread.Sleep(1 * 60 * 1000);
-                QueryThread(exchangeToken, backLink);
+                QueryThread(backLink);
             }
             else
             {
                 if (threadList._metadata.backwardLink != "")
                 {
                     conversactionItems.AddRange(threadList.conversations);
-                    QueryThread(exchangeToken, threadList._metadata.backwardLink);
+                    QueryThread(threadList._metadata.backwardLink);
                 }
                 else
                 {
@@ -276,8 +281,22 @@ namespace SkypeLib
             }
         }
 
-        public void SendMultipleText(string registrationToken,string message,List<string> ids)
+        public void UploadFileToObject(string imageId, string imageLocalFilePath, string logPath, byte[] imageSrcByte)
         {
+            using (WebClient client = new WebClient())
+            {
+                client.Headers.Add("Host", "api.asm.skype.com");
+                client.Headers.Add("Authorization", "skype_token " + _skypeToken);
+                client.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36");
+                client.Headers.Add("Content-Type", "application");
+                var res = client.UploadData("https://api.asm.skype.com/v1/objects/" + imageId + "/content/imgpsh", "PUT", imageSrcByte);
+
+            }
+        }
+
+        public void SendMultipleText(string registrationToken, string message, List<string> ids,int reTryCount =1)
+        {
+            int tryCount = 0;
             List<string> failIds = new List<string>();
             foreach (var item in ids)
             {
@@ -292,24 +311,17 @@ namespace SkypeLib
 
             }
 
-            if(failIds.Count>0)
+            if (failIds.Count > 0)
             {
-                SendMultipleText(registrationToken, message, failIds);
+                if(tryCount < reTryCount)
+                {
+                    SendMultipleText(registrationToken, message, failIds);
+                }
+                tryCount++;
+
+
             }
 
-        }
-
-        public void UploadFileToObject(string skypeToken, string imageId, string imageLocalFilePath, string logPath, byte[] imageSrcByte)
-        {
-            using (WebClient client = new WebClient())
-            {
-                client.Headers.Add("Host", "api.asm.skype.com");
-                client.Headers.Add("Authorization", "skype_token " + skypeToken);
-                client.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36");
-                client.Headers.Add("Content-Type", "application");
-                var res = client.UploadData("https://api.asm.skype.com/v1/objects/" + imageId + "/content/imgpsh", "PUT", imageSrcByte);
-
-            }
         }
 
         public void SendIImage(string registrationToken, string objectId, string userId, string imageName, string text)
@@ -379,28 +391,23 @@ namespace SkypeLib
             }
         }
 
-        public void SendText(string registrationToken, string message, string id)
+        public void SendText(string registrationToken, string message, string id, bool tryAgain = false)
         {
+            HttpWebResponse response = null;
+            try
+            {
 
+                //
+                //POST https://client-s.gateway.messenger.live.com/v1/users/ME/conversations/(string: id)/messages
 
-            //POST https://client-s.gateway.messenger.live.com/v1/users/ME/conversations/(string: id)/messages
-            HttpWebRequest httpWebRequest = WebRequest.Create(MsgHost + "users/ME/conversations/" + id + "/messages") as HttpWebRequest;
-            httpWebRequest.Method = "POST";
-            httpWebRequest.UserAgent = "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0";
-            httpWebRequest.Accept = "application/json, text/javascript";
-            httpWebRequest.Headers.Add("Accept-Language", "zh-tw,zh;q=0.8,en-us;q=0.5,en;q=0.3");
-            httpWebRequest.Headers.Add("Accept-Encoding", "gzip, deflate");
-            httpWebRequest.Headers.Add("ClientInfo", "os=Windows; osVer=8.1; proc=Win32; lcid=en-us; deviceType=1; country=n/a; clientName=skype.com; clientVer=908/1.9.0.232//skype.com");
-            httpWebRequest.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
-            httpWebRequest.Headers.Add("Pragma", "no-cache");
-            httpWebRequest.Headers.Add("Expires", "0");
-            httpWebRequest.Headers.Add("BehaviorOverride", "redirectAs404");
-            httpWebRequest.Headers.Add("RegistrationToken",   registrationToken);
-            httpWebRequest.ContentType = "application/x-www-form-urlencoded";
-            httpWebRequest.Referer = "https://web.skype.com/zh-Hant/";
-            httpWebRequest.Headers.Add("Origin", "https://web.skype.com");
-            httpWebRequest.KeepAlive = true;
-            byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject((object)new Dictionary<string, object>()
+                HttpWebRequest httpWebRequest = WebRequest.Create(_endPoint + "users/ME/conversations/" + id + "/messages") as HttpWebRequest;
+                httpWebRequest.Method = "POST";
+                httpWebRequest.Headers.Add("Expires", "0");
+                httpWebRequest.Headers.Add("BehaviorOverride", "redirectAs404");
+                httpWebRequest.Headers.Add("RegistrationToken", registrationToken);
+                httpWebRequest.ContentType = "application/x-www-form-urlencoded";
+                httpWebRequest.KeepAlive = true;
+                byte[] bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject((object)new Dictionary<string, object>()
             {
             {
                 "content",
@@ -420,19 +427,40 @@ namespace SkypeLib
             }
             }));
 
-            using (Stream requestStream = httpWebRequest.GetRequestStream())
-            {
-                requestStream.Write(bytes, 0, bytes.Length);
-            }
+                using (Stream requestStream = httpWebRequest.GetRequestStream())
+                {
+                    requestStream.Write(bytes, 0, bytes.Length);
+                }
 
-          
 
-            using (WebResponse response = httpWebRequest.GetResponse())
-            {
+                response = (HttpWebResponse)httpWebRequest.GetResponse();
+
                 StreamReader streamReader = new StreamReader(response.GetResponseStream());
                 string contentStringData = streamReader.ReadToEnd();
 
-                
+
+            }
+            catch (WebException e)
+            {
+                if (e.Status == WebExceptionStatus.ProtocolError)
+                {
+                    response = (HttpWebResponse)e.Response;
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        if (!tryAgain)
+                        {
+                            GetRegisterToken();
+                            SendText(registrationToken, message, id, true);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if (response != null)
+                {
+                    response.Close();
+                }
             }
         }
 
