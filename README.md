@@ -13,16 +13,16 @@ dot net skype Api lib
     var exchangeToken = dotSkype.ExchangeSkypeToken(loginToken);
     
     //交換發話用token
-    var regToken =dotSkype.GetRegisterToken(exchangeToken);
+    var regToken =dotSkype.GetRegisterToken();
 
     //查詢自己的UserId
-    var userName = dotSkype.GetSkypeUserProfile(exchangeToken);
+    var userName = dotSkype.GetSkypeUserProfile();
 
     //查詢自己的朋友清單
-    var contact = dotSkype.GetSkypeUserContactInfoList(userName, exchangeToken);
+    var contact = dotSkype.GetSkypeUserContactInfoList(userName);
 
     //查詢自己的所有Conversaction
-    //dotSkype.QueryThread(exchangeToken, "");
+    //dotSkype.QueryThread();
 
     //送大量確保全部信息
     //dotSkype.SendMultipleText(regToken, "test", new List<string>() { "sendMessageUserId" });
